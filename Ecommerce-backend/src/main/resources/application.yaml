@@ -1,3 +1,6 @@
 spring:
   application:
     name: Ecommerce-backend
+
+  profiles:
+    active: dev
