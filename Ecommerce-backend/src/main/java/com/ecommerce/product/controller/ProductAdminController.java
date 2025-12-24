@@ -4,9 +4,10 @@ package com.ecommerce.product.controller;
 import com.ecommerce.common.constants.ApiEndpoint;
 import com.ecommerce.common.dto.ApiResponse;
 import com.ecommerce.common.dto.PaginatedResponse;
-import com.ecommerce.product.dto.ProductCategoryUpdateRequest;
-import com.ecommerce.product.dto.ProductCreateRequest;
-import com.ecommerce.product.dto.ProductUpdateRequest;
+import com.ecommerce.product.dto.request.ProductCategoryUpdateRequest;
+import com.ecommerce.product.dto.request.ProductCreateRequest;
+import com.ecommerce.product.dto.request.ProductUpdateRequest;
+import com.ecommerce.product.dto.response.ProductResponse;
 import com.ecommerce.product.entity.Product;
 import com.ecommerce.product.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +16,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -54,19 +54,19 @@ public class ProductAdminController {
             }
     )
     @PostMapping
-    public ResponseEntity<ApiResponse<Product>> createProduct(@Valid @RequestBody ProductCreateRequest request) {
+    public ResponseEntity<ApiResponse<ProductResponse>> createProduct(@Valid @RequestBody ProductCreateRequest request) {
         return ResponseEntity.ok(ApiResponse.success(productService.createProduct(request)));
     }
 
     // TODO: Implement endpoint to retrieve product details by ID
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Product>> getProduct(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<ProductResponse>> getProduct(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.success(productService.findProductById(id)));
     }
 
     // TODO: Implement endpoint to retrieve all product details
     @GetMapping
-    public ResponseEntity<ApiResponse<PaginatedResponse<Product>>> getProduct(
+    public ResponseEntity<ApiResponse<PaginatedResponse<ProductResponse>>> getProduct(
             @RequestParam(name = "page",defaultValue = "0") int page,
             @RequestParam(name = "size",defaultValue = "10") int size
             ) {
@@ -78,7 +78,7 @@ public class ProductAdminController {
     //      (category, active status, price range)
 
     @GetMapping("/filter")
-    public ResponseEntity<ApiResponse<PaginatedResponse<Product>>> getProduct(
+    public ResponseEntity<ApiResponse<PaginatedResponse<ProductResponse>>> getProduct(
             @RequestParam(name = "category",defaultValue = "NAN",required = false) String category,
             @RequestParam(name = "status",defaultValue = "active",required = false) boolean status,
             @RequestParam(name = "minPrice",defaultValue = "0",required = false) Integer minPrice,
@@ -94,19 +94,30 @@ public class ProductAdminController {
     //      (name, price, description)
 
     @PutMapping
-    public ResponseEntity<ApiResponse<Product>> updateProduct(@Valid @RequestBody ProductUpdateRequest request) {
+    public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(@Valid @RequestBody ProductUpdateRequest request) {
         return ResponseEntity.ok(ApiResponse.success(productService.updateProduct(request)));
     }
 
     // TODO: Implement functionality to reassign a product to a different category
 
     @PutMapping("/update-category/{id}")
-    public ResponseEntity<ApiResponse<Product>> updateCategory(@Valid @RequestBody ProductCategoryUpdateRequest request,@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<ProductResponse>> updateCategory(
+            @Valid @RequestBody ProductCategoryUpdateRequest request,@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.success(productService.productCategoryUpdate(request,id)));
     }
 
     // TODO: Implement endpoint to activate or deactivate a product
     //      (soft delete via isActive flag)
+
+    @PutMapping("/{id}/active")
+    public ResponseEntity<ApiResponse<String>> updateProductStatisActive(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.success(productService.toggleStatus(id,true)));
+    }
+
+    @PutMapping("/{id}/deactive")
+    public ResponseEntity<ApiResponse<String>> updateProductStatusDeactive(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.success(productService.toggleStatus(id,false)));
+    }
 
     // TODO: Implement endpoint to permanently delete a product
 }

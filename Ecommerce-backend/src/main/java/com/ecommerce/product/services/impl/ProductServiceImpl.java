@@ -1,9 +1,10 @@
 package com.ecommerce.product.services.impl;
 
 import com.ecommerce.common.exceptions.ResourceConflictException;
-import com.ecommerce.product.dto.ProductCategoryUpdateRequest;
-import com.ecommerce.product.dto.ProductCreateRequest;
-import com.ecommerce.product.dto.ProductUpdateRequest;
+import com.ecommerce.product.dto.request.ProductCategoryUpdateRequest;
+import com.ecommerce.product.dto.request.ProductCreateRequest;
+import com.ecommerce.product.dto.request.ProductUpdateRequest;
+import com.ecommerce.product.dto.response.ProductResponse;
 import com.ecommerce.product.entity.Category;
 import com.ecommerce.product.entity.Product;
 import com.ecommerce.product.mapper.ProductMapper;
@@ -28,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
 
     @Override
-    public Product createProduct(ProductCreateRequest request) {
+    public ProductResponse createProduct(ProductCreateRequest request) {
         if (productRepository.existsBySku(request.sku())) {
             throw new ResourceConflictException("Product with SKU '" + request.sku() + "' already exists.");
         }
@@ -39,25 +40,28 @@ public class ProductServiceImpl implements ProductService {
         }
 
         Product product = productMapper.toEntity(request, categoryOptional.get());
-        return productRepository.save(product);
+        Product savedProduct =  productRepository.save(product);
+        ProductResponse productResponse = productMapper.toResponse(savedProduct);
+        return productResponse;
     }
 
     @Override
-    public Page<Product> findAllProduct(Pageable  pageable) {
-        return productRepository.findAll(pageable);
+    public Page<ProductResponse> findAllProduct(Pageable  pageable) {
+        Page<Product> productPage = productRepository.findAll(pageable);
+        return productPage.map(productMapper::toResponse);
     }
 
     @Override
-    public Product findProductById(Long id) {
+    public ProductResponse findProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow(
                 ()-> new EntityNotFoundException("Product with id '" + id + "' not found.")
         );
 
-        return product;
+        return productMapper.toResponse(product);
     }
 
     @Override
-    public Page<Product> filterProduct(String category, boolean status, Integer minPrice, Integer maxPrice, Pageable pageable) {
+    public Page<ProductResponse> filterProduct(String category, boolean status, Integer minPrice, Integer maxPrice, Pageable pageable) {
        Category category1 = categoryRepository.findByNameIgnoreCase(category).orElseThrow(()-> new EntityNotFoundException("Category '" + category + "' not found."));
        String categoryCode = category1.getCode();
         Specification<Product> spec =
@@ -65,11 +69,12 @@ public class ProductServiceImpl implements ProductService {
                         .and(ProductSpecification.isActive(status))
                         .and(ProductSpecification.priceBetween(minPrice, maxPrice));
 
-        return productRepository.findAll(spec,pageable);
+        Page<Product> savedProduct = productRepository.findAll(spec,pageable);
+        return  savedProduct.map(productMapper::toResponse);
     }
 
     @Override
-    public Product updateProduct(ProductUpdateRequest request) {
+    public ProductResponse updateProduct(ProductUpdateRequest request) {
         Product product = productRepository.findByNameIgnoreCase(request.name()).orElseThrow(()->
                 new EntityNotFoundException("Product with name '" + request.name() + "' not found."));
 
@@ -77,11 +82,11 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(request.description());
         product.setPrice(request.price());
         Product updatedProduct = productRepository.save(product);
-        return updatedProduct;
+        return productMapper.toResponse(updatedProduct);
     }
 
     @Override
-    public Product productCategoryUpdate(ProductCategoryUpdateRequest request,Long id) {
+    public ProductResponse productCategoryUpdate(ProductCategoryUpdateRequest request,Long id) {
         Category category = categoryRepository.findByNameIgnoreCase(request.name()).orElseThrow(()->
                 new EntityNotFoundException("Category '" + request.name() + "' not found."));
         String categoryCode = category.getCode();
@@ -90,6 +95,16 @@ public class ProductServiceImpl implements ProductService {
                 new EntityNotFoundException("Product with id '" + id + "' not found."));
         product.setCategory(category);
         Product updatedProduct = productRepository.save(product);
-        return updatedProduct;
+        return productMapper.toResponse(updatedProduct);
+    }
+
+    @Override
+    public String toggleStatus(Long id, boolean b) {
+        Product product = productRepository.findById(id).orElseThrow(()->
+                new EntityNotFoundException("Product with id '" + id + "' not found."));
+
+        product.setIsActive(b);
+        productRepository.save(product);
+        return "Product activated";
     }
 }

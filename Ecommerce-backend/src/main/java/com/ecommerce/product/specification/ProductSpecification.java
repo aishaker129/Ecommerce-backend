@@ -11,10 +11,10 @@ public class ProductSpecification {
         };
     }
 
-    public static Specification<Product> isActive(Boolean active) {
+    public static Specification<Product> isActive(Boolean isActive) {
         return (root, query, cb) -> {
-            if (active == null) return null;
-            return cb.equal(root.get("active"), active);
+            if (isActive == null) return null;
+            return cb.equal(root.get("isActive"), isActive);
         };
     }
 

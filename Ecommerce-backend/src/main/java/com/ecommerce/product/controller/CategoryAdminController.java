@@ -2,7 +2,7 @@ package com.ecommerce.product.controller;
 
 import com.ecommerce.common.constants.ApiEndpoint;
 import com.ecommerce.common.dto.ApiResponse;
-import com.ecommerce.product.dto.CategoryCreateRequest;
+import com.ecommerce.product.dto.request.CategoryCreateRequest;
 import com.ecommerce.product.entity.Category;
 import com.ecommerce.product.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;

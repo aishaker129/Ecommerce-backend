@@ -1,7 +1,7 @@
 package com.ecommerce.product.services.impl;
 
 import com.ecommerce.common.exceptions.ResourceConflictException;
-import com.ecommerce.product.dto.CategoryCreateRequest;
+import com.ecommerce.product.dto.request.CategoryCreateRequest;
 import com.ecommerce.product.entity.Category;
 import com.ecommerce.product.mapper.CategoryMapper;
 import com.ecommerce.product.repository.CategoryRepository;

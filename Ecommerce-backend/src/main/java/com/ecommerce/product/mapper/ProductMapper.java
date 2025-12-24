@@ -1,6 +1,7 @@
 package com.ecommerce.product.mapper;
 
-import com.ecommerce.product.dto.ProductCreateRequest;
+import com.ecommerce.product.dto.request.ProductCreateRequest;
+import com.ecommerce.product.dto.response.ProductResponse;
 import com.ecommerce.product.entity.Category;
 import com.ecommerce.product.entity.Product;
 import org.mapstruct.Mapper;
@@ -14,4 +15,7 @@ public interface ProductMapper {
     @Mapping(target = "name", source = "request.name")
     @Mapping(target = "category", source = "category")
     Product toEntity(ProductCreateRequest request, Category category);
+
+    @Mapping(target = "categoryId", source = "category.id") // if createdBy is User entity
+    ProductResponse toResponse(Product product);
 }
