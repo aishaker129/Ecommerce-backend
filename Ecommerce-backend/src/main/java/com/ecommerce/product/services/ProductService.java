@@ -17,9 +17,11 @@ public interface ProductService {
 
     Page<ProductResponse> filterProduct(String category, boolean status, Integer minPrice, Integer maxPrice, Pageable pageable);
 
-    ProductResponse updateProduct( ProductUpdateRequest request);
+    ProductResponse updateProduct(Long id, ProductUpdateRequest request);
 
     ProductResponse productCategoryUpdate(ProductCategoryUpdateRequest request,Long id);
 
     String toggleStatus(Long id, boolean b);
+
+    String deleteProduct(Long id);
 }

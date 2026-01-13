@@ -16,5 +16,29 @@ public class ApiEndpoint {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ProductAdmin{
         public static final String BASE_PRODUCT_ADMIN = API_VERSION + BASE_ADMIN + "/products";
+        public static final String PRODUCT_INVENTORY = "{productId}/inventory";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class CartAdmin{
+        public static  final String BASE_CART_ADMIN = API_VERSION +"/cart";
+        public static final String ADD_CART_ITEM = "/items/{productId}";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Payment{
+        public static  final String BASE_PAYMENT = API_VERSION + "/payment";
+        public static final String CHECKOUT = "/checkout";
+        public static final String SUCCESS = "/success";
+        public static final String CANCEL = "/cancel";
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Auth {
+        public static final String BASE_AUTH = API_VERSION + "/auth";
+        public static final String LOGIN = "/login";
+        public static final String REGISTER = "/register";
+        public static final String LOGOUT = "/logout";
+        public static final String TOKEN_REFRESH = "/refresh";
     }
 }

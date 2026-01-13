@@ -6,9 +6,11 @@ import com.ecommerce.product.dto.request.ProductCreateRequest;
 import com.ecommerce.product.dto.request.ProductUpdateRequest;
 import com.ecommerce.product.dto.response.ProductResponse;
 import com.ecommerce.product.entity.Category;
+import com.ecommerce.product.entity.Inventory;
 import com.ecommerce.product.entity.Product;
 import com.ecommerce.product.mapper.ProductMapper;
 import com.ecommerce.product.repository.CategoryRepository;
+import com.ecommerce.product.repository.InventoryRepository;
 import com.ecommerce.product.repository.ProductRepository;
 import com.ecommerce.product.services.ProductService;
 import com.ecommerce.product.specification.ProductSpecification;
@@ -27,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
+    private final InventoryRepository inventoryRepository;
 
     @Override
     public ProductResponse createProduct(ProductCreateRequest request) {
@@ -41,6 +44,12 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = productMapper.toEntity(request, categoryOptional.get());
         Product savedProduct =  productRepository.save(product);
+
+        Inventory inventory = Inventory.builder()
+                .product(savedProduct)
+                .build();
+        inventoryRepository.save(inventory);
+
         ProductResponse productResponse = productMapper.toResponse(savedProduct);
         return productResponse;
     }
@@ -74,9 +83,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse updateProduct(ProductUpdateRequest request) {
-        Product product = productRepository.findByNameIgnoreCase(request.name()).orElseThrow(()->
-                new EntityNotFoundException("Product with name '" + request.name() + "' not found."));
+    public ProductResponse updateProduct(Long id,ProductUpdateRequest request) {
+        Product product = productRepository.findById(id).orElseThrow(()->
+                new EntityNotFoundException("Product not fouond  with Id '" + id ));
 
         product.setName(request.name());
         product.setDescription(request.description());
@@ -106,5 +115,14 @@ public class ProductServiceImpl implements ProductService {
         product.setIsActive(b);
         productRepository.save(product);
         return "Product activated";
+    }
+
+    @Override
+    public String deleteProduct(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(()->
+                new EntityNotFoundException("Product with id '"+id + "' not found."));
+        productRepository.delete(product);
+
+        return "Product deleted successfully";
     }
 }

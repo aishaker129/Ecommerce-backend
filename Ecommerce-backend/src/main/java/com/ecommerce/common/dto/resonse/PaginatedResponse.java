@@ -1,4 +1,4 @@
-package com.ecommerce.common.dto;
+package com.ecommerce.common.dto.resonse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
