@@ -3,3 +3,7 @@ spring:
     name: Ecommerce-backend
   profiles:
     active: dev
+
+  mvc:
+    problem details:
+      enabled: true

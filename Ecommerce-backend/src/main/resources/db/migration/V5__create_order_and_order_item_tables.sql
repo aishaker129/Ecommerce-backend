@@ -11,7 +11,7 @@ CREATE TABLE orders (
 
                         status VARCHAR(50) NOT NULL,
 
-                        create_date DATETIME NOT NULL
+                        create_date DATETIME  NULL
 )ENGINE=InnoDB;
 
 CREATE TABLE order_items (

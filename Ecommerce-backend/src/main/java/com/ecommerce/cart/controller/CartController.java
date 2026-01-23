@@ -13,10 +13,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(ApiEndpoint.CartAdmin.BASE_CART_ADMIN)
+@RequestMapping(ApiEndpoint.CartAdmin.BASE_CART)
 @RequiredArgsConstructor
 @Tag(
         name = "Cart",
@@ -52,6 +53,7 @@ public class CartController {
             }
     )
     @PostMapping(ApiEndpoint.CartAdmin.ADD_CART_ITEM)
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).ADD_TO_CART.name())")
     public ResponseEntity<ApiResponse<Void>> createOrUpdateCart(@PathVariable Long productId, @Valid @RequestBody CartRequest request){
         cartService.addCreateOrUpdateCart(productId,request);
         return ResponseEntity.ok(ApiResponse.success("Item added to cart successfully"));
@@ -74,6 +76,7 @@ public class CartController {
             }
     )
     @GetMapping
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).VIEW_CART.name())")
     public ResponseEntity<ApiResponse<CartResponse>> viewCart(@RequestParam(name = "user_Id") Long userId){
         return ResponseEntity.ok(ApiResponse.success(cartService.getCartByUserId(userId)));
     }

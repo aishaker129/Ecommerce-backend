@@ -34,7 +34,7 @@ public class Cart extends BaseEntity {
     private List<CartItems> items = new ArrayList<>();
 
     @Builder.Default
-    @Column(name = "create_date", nullable = false, updatable = false)
+    @Column(name = "create_date")
     private LocalDateTime createAt = LocalDateTime.now();
 
     @Column(name = "modified_date")

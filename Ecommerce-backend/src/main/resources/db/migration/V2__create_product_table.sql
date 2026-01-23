@@ -8,7 +8,7 @@ CREATE TABLE products (
                           is_active BOOLEAN NOT NULL DEFAULT TRUE,
                           category_id BIGINT NOT NULL,
                           image_url VARCHAR(250),
-                          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                          created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
                           modified_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
                           created_by BIGINT NULL,
                           modified_by BIGINT NULL,

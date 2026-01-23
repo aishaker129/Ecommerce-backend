@@ -14,6 +14,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of {@link InventoryService} for stock management.
+ *
+ * <p>Handles stock updates, reservations, and finalization
+ * after payment completion.</p>
+ *
+ * @author Md.Akhlakul Islam
+ */
+
 @Service
 @RequiredArgsConstructor
 public class InventoryServiceImpl implements InventoryService {

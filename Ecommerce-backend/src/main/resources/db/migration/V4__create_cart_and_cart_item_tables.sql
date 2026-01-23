@@ -4,7 +4,7 @@ CREATE TABLE carts (
 
                        user_id BIGINT NOT NULL,
 
-                       create_date DATETIME NOT NULL,
+                       create_date DATETIME NULL,
                        modified_date DATETIME NULL
 )ENGINE=InnoDB;
 

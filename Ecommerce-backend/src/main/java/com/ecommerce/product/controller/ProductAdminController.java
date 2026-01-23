@@ -21,10 +21,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(ApiEndpoint.ProductAdmin.BASE_PRODUCT_ADMIN)
+@RequestMapping(ApiEndpoint.ProductAdmin.BASE_PRODUCT)
 @RequiredArgsConstructor
 @Tag(
         name = "Product Admin",
@@ -57,6 +58,7 @@ public class ProductAdminController {
             }
     )
     @PostMapping
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).CREATE_PRODUCT.name())")
     public ResponseEntity<ApiResponse<ProductResponse>> createProduct(@Valid @RequestBody ProductCreateRequest request) {
         return ResponseEntity.ok(ApiResponse.success(productService.createProduct(request)));
     }
@@ -79,6 +81,7 @@ public class ProductAdminController {
             }
     )
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).VIEW_PRODUCTS.name())")
     public ResponseEntity<ApiResponse<ProductResponse>> getProduct(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.success(productService.findProductById(id)));
     }
@@ -96,6 +99,7 @@ public class ProductAdminController {
             }
     )
     @GetMapping
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).VIEW_PRODUCTS.name())")
     public ResponseEntity<ApiResponse<PaginatedResponse<ProductResponse>>> getProduct(
             @RequestParam(name = "page",defaultValue = "0") int page,
             @RequestParam(name = "size",defaultValue = "10") int size
@@ -119,6 +123,7 @@ public class ProductAdminController {
             }
     )
     @GetMapping("/filter")
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).VIEW_PRODUCTS.name())")
     public ResponseEntity<ApiResponse<PaginatedResponse<ProductResponse>>> getProduct(
             @RequestParam(name = "category",defaultValue = "NAN",required = false) String category,
             @RequestParam(name = "status",defaultValue = "active",required = false) boolean status,
@@ -156,6 +161,7 @@ public class ProductAdminController {
             }
     )
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).UPDATE_PRODUCT.name())")
     public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(@PathVariable Long id,@Valid @RequestBody ProductUpdateRequest request) {
         return ResponseEntity.ok(ApiResponse.success(productService.updateProduct(id, request)));
     }
@@ -185,6 +191,7 @@ public class ProductAdminController {
             }
     )
     @PutMapping("/update-category/{id}")
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).UPDATE_PRODUCT.name())")
     public ResponseEntity<ApiResponse<ProductResponse>> updateCategory(
             @Valid @RequestBody ProductCategoryUpdateRequest request,@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.success(productService.productCategoryUpdate(request,id)));
@@ -210,6 +217,7 @@ public class ProductAdminController {
             }
     )
     @PutMapping("/{id}/status")
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).TOGGLE_PRODUCT_STATUS.name())")
     public ResponseEntity<ApiResponse<String>> updateProductStatisActive(@PathVariable Long id,@RequestParam Boolean isActive) {
         return ResponseEntity.ok(ApiResponse.success(productService.toggleStatus(id,isActive)));
     }
@@ -232,11 +240,13 @@ public class ProductAdminController {
             }
     )
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).DELETE_PRODUCT.name())")
     public ResponseEntity<ApiResponse<String>> deleteProduct(@PathVariable Long id){
         return ResponseEntity.ok(ApiResponse.success(productService.deleteProduct(id)));
     }
 
     @PutMapping(ApiEndpoint.ProductAdmin.PRODUCT_INVENTORY)
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).UPDATE_INVENTORY.name())")
     public ResponseEntity<ApiResponse<Void>> updateStock(@PathVariable Long productId, @Valid @RequestBody InventoryUpdateRequest request){
         inventoryService.updateStock(productId,request);
         return ResponseEntity.ok(ApiResponse.success("Stock updated successfully"));

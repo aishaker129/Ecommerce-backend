@@ -5,7 +5,7 @@ CREATE TABLE inventories (
                              total_quantity INT NOT NULL DEFAULT 0,
                              reserved_quantity INT NOT NULL DEFAULT 0,
                              version BIGINT NOT NULL DEFAULT 0,
-                             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                             created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
                              modified_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
                              created_by BIGINT NULL,
                              modified_by BIGINT NULL,

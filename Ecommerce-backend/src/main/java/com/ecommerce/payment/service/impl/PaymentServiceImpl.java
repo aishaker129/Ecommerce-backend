@@ -25,6 +25,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of {@link PaymentService} for Stripe payment processing.
+ *
+ * <p>Orchestrates checkout flow including stock reservation, order creation,
+ * and payment handling via Stripe webhooks.</p>
+ *
+ * @author Md.Akhlakul Islam
+ */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -110,7 +119,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         order.getOrderItems().forEach(orderItem -> paramBuilder.addLineItem(createLineItem(orderItem)));
 
-        paramBuilder.addLineItem(createDeliveryChargeLineItem(500));
+        paramBuilder.addLineItem(createDeliveryChargeLineItem(50));
         paramBuilder.putMetadata("userId",String.valueOf(userId));
 
         return Session.create(paramBuilder.build());

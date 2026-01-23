@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -46,6 +47,7 @@ public class PaymentController {
             }
     )
     @PostMapping(ApiEndpoint.Payment.CHECKOUT)
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).CHECKOUT.name())")
     public ResponseEntity<ApiResponse<CheckoutResponse>> checkout(@RequestParam("user_Id") Long userId) throws StripeException {
         return ResponseEntity.ok(ApiResponse.success(
                 CheckoutResponse.builder()
@@ -71,8 +73,25 @@ public class PaymentController {
             }
     )
     @GetMapping(ApiEndpoint.Payment.SUCCESS)
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).PAYMENT_SUCCESS.name())")
     public ResponseEntity<ApiResponse<Void>> paymentSuccess(@RequestParam("sessionId") String sessionId){
         paymentService.handleSuccessfullPayment(sessionId);
         return ResponseEntity.ok(ApiResponse.success("Payment successful! Session with id: "+sessionId));
+    }
+
+    @Operation(
+            summary = "Handle canceled payment",
+            description = "Callback endpoint for Stripe when payment is canceled by the user.",
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Cancellation handled successfully"
+                    )
+            }
+    )
+    @GetMapping(ApiEndpoint.Payment.CANCEL)
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).PAYMENT_CANCEL.name())")
+    public String paymentCancel(){
+        return "Payment cancel.";
     }
 }

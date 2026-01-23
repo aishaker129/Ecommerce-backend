@@ -1,9 +1,15 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ db
-    username: root
-    password: password
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
 
   flyway:
     enabled: true
@@ -13,13 +19,13 @@ spring:
   application:
     security:
       jwt:
-        signing-key: your-signing-key
+        signing-key: ${JWT_SIGNING_KEY}
         expiration-ms: 600000 # 10 minutes
       refresh-token:
         expiration-ms: 604800000 # 7 days
 
-stripe:
-  api-key: sk_test_your_stripe_api_key
-  success-url: http://localhost:8080/api/v1/payment/success?session_id={CHECKOUT_SESSION_ID}
-  cancel-url: http://localhost:8080/api/v1/payment/cancel
-  currency: bdt
+  stripe:
+    api-key: ${STRIPE_API_KEY}
+    success-url: ${STRIPE_SUCCESS_URL}
+    cancel-url: ${STRIPE_CANCEL_URL}
+    currency: ${STRIPE_CURRENCY}

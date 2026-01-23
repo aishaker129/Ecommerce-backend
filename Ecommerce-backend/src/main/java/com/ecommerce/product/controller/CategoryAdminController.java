@@ -16,10 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(ApiEndpoint.CategoryAdmin.BASE_CATEGORY_ADMIN)
+@RequestMapping(ApiEndpoint.CategoryAdmin.BASE_CATEGORY)
 @RequiredArgsConstructor
 @Tag(
         name = "Category admin",
@@ -52,6 +53,7 @@ public class CategoryAdminController {
             }
     )
     @PostMapping
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).CREATE_CATEGORY.name())")
     public ResponseEntity<ApiResponse<Category>> createCategory(@Valid @RequestBody CategoryCreateRequest request){
         return ResponseEntity.ok(ApiResponse.success(categoryService.create(request)));
     }
@@ -73,6 +75,7 @@ public class CategoryAdminController {
             }
     )
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).VIEW_CATEGORY.name())")
     public ResponseEntity<ApiResponse<Category>> findAllCategory(@PathVariable Long id){
         return ResponseEntity.ok(ApiResponse.success(categoryService.getCategoryById(id)));
     }
@@ -89,6 +92,7 @@ public class CategoryAdminController {
             }
     )
     @GetMapping
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).VIEW_CATEGORY.name())")
     public ResponseEntity<ApiResponse<PaginatedResponse<Category>>> getAllCategory(
             @RequestParam(name = "page",defaultValue = "0") Integer page,
             @RequestParam(name = "size",defaultValue = "10") Integer size
@@ -119,6 +123,7 @@ public class CategoryAdminController {
             }
     )
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).UPDATE_CATEGORY.name())")
     public ResponseEntity<ApiResponse<Category>> updateCategory(
             @PathVariable Long id,
             @Valid @RequestBody CategoryUpdateRequest request
@@ -143,6 +148,7 @@ public class CategoryAdminController {
             }
     )
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).TOGGLE_CATEGORY_STATUS.name())")
     public ResponseEntity<ApiResponse<Category>> toggleCategoryStatus(
             @PathVariable Long id,
             @RequestParam Boolean isActive)
@@ -166,6 +172,7 @@ public class CategoryAdminController {
             }
     )
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority(T(com.ecommerce.user.enums.PermissionType).DELETE_CATEGORY.name())")
     public ResponseEntity<ApiResponse<String>> deleteCategoryById(@PathVariable Long id){
         return ResponseEntity.ok(ApiResponse.success(categoryService.deleteCategory(id)));
     }
