@@ -72,11 +72,10 @@ Follow these instructions to get the project up and running on your local machin
 
 2.  **Set up the database:**
     -   Create a new MySQL database.
-    -   Update the database credentials in `src/main/resources/application-dev.yaml`.
+    -   Make sure your MySQL server is running.
 
 3.  **Configure the application:**
-    -   Create a `.env` file in the `Ecommerce-backend` directory.
-    -   Add the required environment variables to the `.env` file (see the [Configuration](#configuration) section).
+    -   Set the required environment variables (see the [Configuration](#configuration) section). A common way to do this is to `export` them in your shell session.
 
 4.  **Run the application:**
     ```bash
@@ -87,28 +86,54 @@ The application will be available at `http://localhost:8080`.
 
 ## Configuration
 
-The application is configured through `application.yaml` files and environment variables.
+The application is configured through `application.yaml` files and environment variables. The `dev` profile is active by default for local development.
 
 ### Environment Variables
 
-Create a `.env` file in the `Ecommerce-backend` directory and add the following variables:
+You need to set the following environment variables before running the application:
 
-```
-STRIPE_SECRET_KEY=your_stripe_secret_key
-JWT_SECRET=your_jwt_secret
+```bash
+# Example for a Unix-like shell
+export DB_URL="jdbc:mysql://localhost:3306/your_database_name"
+export DB_USERNAME="your_mysql_username"
+export DB_PASSWORD="your_mysql_password"
+
+export REDIS_HOST="localhost"
+export REDIS_PORT="6379"
+export REDIS_PASSWORD="" # Set your Redis password if you have one
+
+export JWT_SIGNING_KEY="your_super_secret_jwt_signing_key_that_is_long_and_secure"
+
+export STRIPE_API_KEY="sk_test_your_stripe_api_key"
+export STRIPE_SUCCESS_URL="http://localhost:8080/api/v1/payments/success"
+export STRIPE_CANCEL_URL="http://localhost:8080/api/v1/payments/cancel"
+export STRIPE_CURRENCY="usd"
 ```
 
--   `STRIPE_SECRET_KEY`: Your secret key for the Stripe API.
--   `JWT_SECRET`: The secret key for signing JWTs.
+-   `DB_URL`: The JDBC URL for your MySQL database.
+-   `DB_USERNAME`: Your MySQL username.
+-   `DB_PASSWORD`: Your MySQL password.
+-   `REDIS_HOST`: The host for your Redis server.
+-   `REDIS_PORT`: The port for your Redis server.
+-   `REDIS_PASSWORD`: The password for your Redis server (if applicable).
+-   `JWT_SIGNING_KEY`: A secret key for signing JWTs. This should be a long, random string.
+-   `STRIPE_API_KEY`: Your secret API key for Stripe.
+-   `STRIPE_SUCCESS_URL`: The URL to redirect to after a successful payment.
+-   `STRIPE_CANCEL_URL`: The URL to redirect to after a canceled payment.
+-   `STRIPE_CURRENCY`: The currency to use for Stripe payments.
+
 
 ### Application Profiles
 
 The application uses Spring profiles to manage different environments. The following profiles are available:
 
--   `dev`: For local development.
+-   `dev`: For local development (default).
 -   `prod`: For production.
 
-You can activate a profile by setting the `SPRING_PROFILES_ACTIVE` environment variable.
+You can activate a profile by setting the `SPRING_PROFILES_ACTIVE` environment variable. For example:
+```bash
+export SPRING_PROFILES_ACTIVE=prod
+```
 
 ## API Documentation
 
