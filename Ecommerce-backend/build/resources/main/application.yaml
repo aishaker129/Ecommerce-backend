@@ -1,9 +1,0 @@
-spring:
-  application:
-    name: Ecommerce-backend
-  profiles:
-    active: dev
-
-  mvc:
-    problem details:
-      enabled: true
