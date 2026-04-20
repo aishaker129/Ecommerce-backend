@@ -1,0 +1,35 @@
+services:
+  app:
+    build: .
+    container_name: campuskart-app
+    ports:
+      - "8081:8081"
+    env_file:
+      - .env
+    networks:
+      - campuskart-net
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: campuskart-redis
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - campuskart-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+
+networks:
+  campuskart-net:
+    driver: bridge

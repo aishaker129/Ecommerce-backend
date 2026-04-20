@@ -1,2 +1,0 @@
-
-ALTER TABLE products MODIFY COLUMN product_image VARCHAR(255) NULL;
