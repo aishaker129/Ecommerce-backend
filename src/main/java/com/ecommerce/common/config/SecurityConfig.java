@@ -40,6 +40,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private static final String[] WHITELIST_URLS = {
+            "/",
             "/error/**",
             "/swagger-resources",
             "/swagger-resources/**",
