@@ -157,7 +157,7 @@ To run the application and Redis using Docker Compose:
     ```bash
     docker-compose up --build
     ```
-2.  The application will be accessible at `http://localhost:8081`.
+2.  The application will be accessible at `https://ecommerce-backend-tykm.onrender.com`.
 
 ## Testing
 
