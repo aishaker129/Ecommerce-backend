@@ -83,13 +83,4 @@ public class WebhookController {
         return ResponseEntity.ok(ApiResponse.success("OK"));
     }
 
-    @GetMapping("/dummy-success")
-    public String success() {
-        return "OK";
-    }
-
-    @GetMapping("/dummy-cancel")
-    public String cancel() {
-        return "Cancelled";
-    }
 }
